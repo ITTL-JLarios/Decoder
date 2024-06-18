@@ -61,7 +61,7 @@ class Decoder(ft.Column):
 
     def decode(self, e):
         if self.path:
-            print('decoding...')
+            #print('decoding...')
             lst = []
             res = []
             with open(self.path, 'r') as file:

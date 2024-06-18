@@ -7,18 +7,18 @@ from program.decoder import Decoder
 
 def main(page: ft.Page):
     def on_dialog_result(e: ft.FilePickerResultEvent):
-        print('path: ', e.files[0].path)
+        #print('path: ', e.files[0].path)
         main_page.path_text(e.files[0].path)
         decoder_page.set_path(e.files[0].path)
         page.update()
 
     def change_date_start(e):
         decoder_page.set_start_date(date_picker_start.value)
-        print(f"Start Date picker changed, value is {date_picker_start.value}")
+        #print(f"Start Date picker changed, value is {date_picker_start.value}")
         page.update()
 
     def change_date_end(e):
-        print(f"End Date picker changed, value is {date_picker_end.value}")
+        #print(f"End Date picker changed, value is {date_picker_end.value}")
         decoder_page.set_end_date(date_picker_end.value)
         page.update()
 
