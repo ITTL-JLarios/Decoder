@@ -1,51 +1,31 @@
-import flet as ft
-from datetime import datetime
+import tkinter as tk
+from tkinter.filedialog import askopenfilename
 
-from program.search import Search
 from program.decoder import Decoder
 
+root = tk.Tk()
+decoder = Decoder(root=root)
 
-def main(page: ft.Page):
-    def on_dialog_result(e: ft.FilePickerResultEvent):
-        print('path: ', e.files[0].path)
-        main_page.path_text(e.files[0].path)
-        decoder_page.set_path(e.files[0].path)
-        page.update()
+# Program title and TK Variables
+root.title('Decoder')
+my_path = tk.Variable()
+y_scroll = tk.Scrollbar(root, orient='vertical').grid(column=3)
 
-    def change_date_start(e):
-        print(f"Start Date picker changed, value is {date_picker_start.value}")
-        decoder_page.set_start_date(date_picker_start.value)
-        page.update()
+def find_file():
+    file_name = askopenfilename()
+    decoder.set_path(file_name)
+    my_path.set(file_name)
 
-    def change_date_end(e):
-        print(f"End Date picker changed, value is {date_picker_start.value}")
-        decoder_page.set_end_date(date_picker_end.value)
-        page.update()
+def main():
+    widget = tk.Label(root, text='TTL Decoder').grid(row=0)
+    label = tk.Label(root, text='File Path').grid(row=2, column=0)
+    browser_button = tk.Button(root, text='Browser File',
+                               width=25, command=find_file).grid(row=2, column=2)
+    path = tk.Entry(root, textvariable=my_path).grid(row=2, column=1)
 
-    page.title = 'TTL - Decoder'
-    page.scroll = ft.ScrollMode.AUTO
-    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-    # File Picker
-    file_picker = ft.FilePicker(on_result=on_dialog_result)
-    page.overlay.append(file_picker)
-    # Date Picker
-    date_picker_start = ft.DatePicker(
-            on_change=change_date_start,
-            last_date=datetime.now()
-        )
-    date_picker_end = ft.DatePicker(
-            on_change=change_date_end,
-            last_date=datetime.now()
-        )
-    page.overlay.append(date_picker_start)
-    page.overlay.append(date_picker_end)
-    page.update()
+    decode_button = tk.Button(root, text='Decode',
+                                command=decoder.decode).grid(row=3, column=2)
 
-    # craete application instance
-    main_page = Search(file_picker)
-    decoder_page = Decoder(date_picker_start, date_picker_end)
-    page.add(main_page)
-    page.add(decoder_page)
-    
+    root.mainloop()
 
-ft.app(target=main)
+main()
