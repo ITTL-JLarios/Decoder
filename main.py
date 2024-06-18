@@ -13,12 +13,12 @@ def main(page: ft.Page):
         page.update()
 
     def change_date_start(e):
-        print(f"Start Date picker changed, value is {date_picker_start.value}")
         decoder_page.set_start_date(date_picker_start.value)
+        print(f"Start Date picker changed, value is {date_picker_start.value}")
         page.update()
 
     def change_date_end(e):
-        print(f"End Date picker changed, value is {date_picker_start.value}")
+        print(f"End Date picker changed, value is {date_picker_end.value}")
         decoder_page.set_end_date(date_picker_end.value)
         page.update()
 

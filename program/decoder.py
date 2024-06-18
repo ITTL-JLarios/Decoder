@@ -60,35 +60,39 @@ class Decoder(ft.Column):
         ]
 
     def decode(self, e):
-        dlg = ft.AlertDialog(
-            title=ft.Text('PLease seclect a File to Decode'),
-            on_dismiss=lambda e: print('dismissed'))
         if self.path:
             print('decoding...')
+            lst = []
+            res = []
             with open(self.path, 'r') as file:
                 lines = file.readlines()
                 for line in lines:
                     row = line.split(',')
-
                     time_stamp = datetime.strptime(row[0], '%Y-%m-%d %H:%M:%S.%f')
+                    decrypt_app = self.fernet.decrypt(row[1]).decode()
+                    decrypt_title = self.fernet.decrypt(row[2]).decode()
+                    lst.append((time_stamp, decrypt_app, decrypt_title))
 
-                    if type(self.start_date.text) == str or self.start_date.text > time_stamp:
-                        if type(self.end_date.text) == str or self.end_date.text < time_stamp:
-                    
-                            decrypt_app = self.fernet.decrypt(row[1]).decode()
-                            decrypt_title = self.fernet.decrypt(row[2]).decode()
-                            self.rows.append(
-                                ft.DataRow(
-                                    cells=[
-                                        ft.DataCell(ft.Text(str(row[0]))),
-                                        ft.DataCell(ft.Text(decrypt_app)),
-                                        ft.DataCell(ft.Text(decrypt_title)),
-                                    ]
-                                )
-                            )
+            if type(self.start_date.text) != str:
+                lst = list(filter(lambda event: event[0] > self.start_date.text , lst))
+
+            if type(self.end_date.text) != str:
+                lst = list(filter(lambda event: event[0] < self.end_date.text, lst))
+
+             
+            self.rows.clear()
+            for event in lst:
+                self.rows.append(
+                    ft.DataRow(
+                        cells=[
+                            ft.DataCell(ft.Text(event[0])),
+                            ft.DataCell(ft.Text(event[1])),
+                            ft.DataCell(ft.Text(event[2])),
+                        ]
+                    )
+                )
+
             self.update()
-        else:
-            dlg.open = True
 
     def set_path(self, path:str):
         self.path = path
