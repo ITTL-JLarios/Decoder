@@ -63,7 +63,6 @@ class Decoder(ft.Column):
         if self.path:
             #print('decoding...')
             lst = []
-            res = []
             with open(self.path, 'r') as file:
                 lines = file.readlines()
                 for line in lines:
